@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trắc nghiệm Địa lí 12 – Vị trí địa lí và phạm vi lãnh thổ</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: system-ui, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            background: #f0f4f8;
+            display: flex;
+            justify-content: center;
+            padding: 2rem 1rem;
+        }
+        .quiz-container {
+            max-width: 1000px;
+            width: 100%;
+            background: white;
+            border-radius: 32px;
+            box-shadow: 0 20px 35px -8px rgba(0, 0, 0, 0.15);
+            padding: 2rem;
+        }
+        h1 {
+            font-size: 1.9rem;
+            font-weight: 700;
+            color: #0b3b5c;
+            margin-bottom: 0.25rem;
+            letter-spacing: -0.5px;
+            border-left: 6px solid #2a7faa;
+            padding-left: 1rem;
+        }
+        .subhead {
+            color: #3e5f73;
+            margin-bottom: 2rem;
+            font-size: 1rem;
+            padding-left: 1.5rem;
+            border-bottom: 1px dashed #b8d0e0;
+            padding-bottom: 0.75rem;
+        }
+        .score-panel {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #e8f0f7;
+            border-radius: 100px;
+            padding: 0.8rem 1.8rem;
+            margin-bottom: 2rem;
+            font-weight: 600;
+            color: #0b3b5c;
+        }
+        .score-panel span {
+            font-size: 1.4rem;
+            background: #0b3b5c;
+            color: white;
+            padding: 0.3rem 1rem;
+            border-radius: 40px;
+            min-width: 80px;
+            text-align: center;
+        }
+        .section-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #154a6b;
+            margin: 2rem 0 1rem 0;
+            padding-bottom: 0.3rem;
+            border-bottom: 2px solid #c2d9e8;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .section-title i {
+            font-style: normal;
+            background: #2a7faa;
+            color: white;
+            border-radius: 50%;
+            width: 28px;
+            height: 28px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+        }
+        .question-card {
+            background: #ffffff;
+            border: 1px solid #d9e5f0;
+            border-radius: 20px;
+            padding: 1.5rem 1.5rem 1.2rem 1.5rem;
+            margin-bottom: 1.5rem;
+            transition: all 0.1s;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+        }
+        .question-card.wrong-highlight {
+            border-color: #e57373;
+            background: #fff8f8;
+        }
+        .question-text {
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: #10344b;
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+        }
+        .option {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            padding: 0.5rem 0.75rem;
+            border-radius: 12px;
+            background: #f9fcff;
+            transition: background 0.1s;
+            cursor: pointer;
+        }
+        .option:hover { background: #e3eff9; }
+        .option input[type="radio"] {
+            margin-top: 0.25rem;
+            accent-color: #1d6b9c;
+            width: 1.1rem;
+            height: 1.1rem;
+            flex-shrink: 0;
+            cursor: pointer;
+        }
+        .option label {
+            font-size: 1rem;
+            color: #1a3f56;
+            line-height: 1.4;
+            cursor: pointer;
+            flex: 1;
+        }
+        .tf-options {
+            display: flex;
+            gap: 2rem;
+            padding-left: 0.5rem;
+            margin-top: 0.5rem;
+        }
+        .tf-options .option {
+            background: transparent;
+            padding: 0.3rem 0.8rem;
+            border-radius: 30px;
+            width: auto;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .btn-submit {
+            background: #0b3b5c;
+            color: white;
+            border: none;
+            font-size: 1.3rem;
+            font-weight: 700;
+            padding: 1rem 2.5rem;
+            border-radius: 60px;
+            width: 100%;
+            cursor: pointer;
+            margin-top: 2rem;
+            transition: background 0.2s, transform 0.1s;
+            box-shadow: 0 12px 20px -8px rgba(11, 59, 92, 0.4);
+        }
+        .btn-submit:hover { background: #1a5a82; }
+        .btn-submit:active { transform: scale(0.98); }
+        .reset-btn {
+            background: #e2eaf1;
+            border: none;
+            font-size: 1rem;
+            font-weight: 600;
+            padding: 0.8rem 2rem;
+            border-radius: 40px;
+            color: #154a6b;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            margin: 1rem auto 0 auto;
+            transition: background 0.2s;
+        }
+        .reset-btn:hover { background: #cddde9; }
+        .note {
+            background: #fff7e5;
+            border-left: 4px solid #f4b942;
+            padding: 0.7rem 1.2rem;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            color: #5e4a1e;
+            margin-bottom: 1.8rem;
+        }
+        .footer {
+            margin-top: 2rem;
+            text-align: center;
+            color: #7a9bb0;
+            font-size: 0.85rem;
+        }
+        .hidden { display: none; }
+
+        /* === KẾT QUẢ === */
+        .result-box {
+            margin-top: 1.5rem;
+            border-radius: 20px;
+            padding: 1.5rem;
+            background: #eef6fc;
+            border: 1px solid #cbe0ef;
+        }
+        .result-header {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #0b3b5c;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .stat-card {
+            background: white;
+            border-radius: 16px;
+            padding: 1rem;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.04);
+            border: 1px solid #dceaf4;
+        }
+        .stat-card .stat-value {
+            font-size: 2rem;
+            font-weight: 800;
+            line-height: 1.2;
+        }
+        .stat-card .stat-label {
+            font-size: 0.85rem;
+            color: #5c7a8d;
+            margin-top: 0.3rem;
+            font-weight: 500;
+        }
+        .stat-card.correct .stat-value { color: #2e7d32; }
+        .stat-card.wrong .stat-value { color: #c62828; }
+        .stat-card.score .stat-value { color: #0b3b5c; }
+
+        .detail-section {
+            margin-top: 1.5rem;
+        }
+        .detail-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: #154a6b;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .wrong-item {
+            background: #fff5f5;
+            border: 1px solid #f3c4c4;
+            border-left: 5px solid #e57373;
+            border-radius: 12px;
+            padding: 1rem 1.2rem;
+            margin-bottom: 1rem;
+        }
+        .wrong-item .wq {
+            font-weight: 700;
+            color: #7f1d1d;
+            margin-bottom: 0.6rem;
+            line-height: 1.4;
+        }
+        .wrong-item .wline {
+            font-size: 0.95rem;
+            margin: 0.3rem 0;
+            color: #333;
+        }
+        .wrong-item .wline .label {
+            font-weight: 600;
+            display: inline-block;
+            min-width: 130px;
+        }
+        .wrong-item .your-ans { color: #c62828; font-weight: 600; }
+        .wrong-item .correct-ans { color: #2e7d32; font-weight: 700; }
+        .all-good {
+            text-align: center;
+            padding: 1.5rem;
+            background: #e8f5e9;
+            border-radius: 16px;
+            color: #2e7d32;
+            font-weight: 600;
+            font-size: 1.1rem;
+            border: 1px solid #b6d7a8;
+        }
+    </style>
+</head>
+<body>
+<div class="quiz-container">
+    <h1>📍 Vị trí địa lí & phạm vi lãnh thổ</h1>
+    <div class="subhead">Địa lí 12 – Trắc nghiệm tổng hợp (thang điểm 10)</div>
+
+    <div class="score-panel">
+        <span style="font-size:1rem; background:transparent; color:#0b3b5c; padding:0;">📋 30 câu (20 TN + 10 Đ/S)</span>
+        <div>Điểm: <span id="scoreDisplay">0.0</span></div>
+    </div>
+
+    <div class="note">
+        ⚡ Mỗi lần làm lại, câu hỏi và đáp án sẽ được xáo trộn ngẫu nhiên. Nộp bài để xem điểm và chi tiết câu sai.
+    </div>
+
+    <!-- PHẦN I -->
+    <div class="section-title"><i>1</i> Phần I – Trắc nghiệm nhiều lựa chọn (20 câu)</div>
+    <div id="part1Container"></div>
+
+    <!-- PHẦN II -->
+    <div class="section-title"><i>2</i> Phần II – Trắc nghiệm Đúng/Sai (10 câu)</div>
+    <div id="part2Container"></div>
+
+    <button class="btn-submit" id="submitBtn">✅ NỘP BÀI & XEM KẾT QUẢ</button>
+
+    <!-- KHỐI KẾT QUẢ -->
+    <div id="resultBox" class="result-box hidden">
+        <div class="result-header" id="resultHeader"></div>
+        <div class="stats-grid" id="statsGrid"></div>
+        <div class="detail-section" id="detailSection"></div>
+    </div>
+
+    <button class="reset-btn" id="resetBtn">🔄 LÀM LẠI BÀI THI (xáo trộn mới)</button>
+    <div class="footer">Dựa trên tài liệu ôn tập giữa kì 1 – Địa lí 12</div>
+</div>
+
+<script>
+    // ========== KHO DỮ LIỆU GỐC ==========
+    const part1Questions = [
+        { q: "Vị trí địa lí của nước ta nằm trong vực hoạt động của gió mùa châu Á nên", options: ["khí hậu nước ta có tính chất nhiệt đới ẩm", "khí hậu nước ta mang tính chất ẩm", "khí hậu nước ta có sự phân hóa phức tạp", "khí hậu nước ta thay đổi theo mùa."], correct: 3 },
+        { q: "Nước ta có vị trí tiếp giáp giữa lục địa và đại dương liền kề với vành đai sinh khoáng nên có", options: ["nhiều tài nguyên khoáng sản.", "nhiều tài nguyên sinh vật.", "thiên nhiên phân hóa đa dạng", "nhiều thiên tai nhiệt đới."], correct: 0 },
+        { q: "Vị trí nằm hoàn toàn trong vùng nội chí tuyến nên nước ta có", options: ["lượng mưa lớn.", "nền nhiệt độ cao.", "khí hậu mát mẻ.", "nhiều sông lớn."], correct: 1 },
+        { q: "Sự phân hóa đa dạng của tự nhiên nước ta là do", options: ["đặc điểm của vị trí địa lí và hình thể nước ta.", "địa hình nước ta chủ yếu là đồi núi thấp.", "vị trí chuyển tiếp giữa lục địa và đại dương.", "chịu ảnh hưởng của gió mùa, Biển Đông."], correct: 0 },
+        { q: "Việt Nam có nguồn tài nguyên sinh vật vô cùng phong phú là do", options: ["nằm liền kề với vành đai sinh khoáng của Thái Bình Dương.", "Nằm trên đường di lưu và di cư của nhiều loài động, thực vật.", "nằm trong vùng nội chí tuyến Bắc bán cầu, giáp biển Đông.", "nằm liền kề với vành đai sinh khoáng của vùng Địa Trung Hải."], correct: 1 },
+        { q: "Nước ta nằm hoàn toàn trong vùng nhiệt đới bán cầu Bắc nên có", options: ["Khí hậu mang tính chất cận xích đạo rõ rệt.", "thiên nhiên giàu sức sống, bốn mùa xanh tốt.", "thiên nhiên nước ta phân hóa rất đa dạng.", "nền nhiệt cao, hai lần Mặt Trời lên thiên đỉnh."], correct: 3 },
+        { q: "Nước ta giáp biển Đông nên có", options: ["hai lần Mặt Trời lên thiên đỉnh trong năm.", "gió mùa Đông Bắc hoạt động ở mùa đông.", "tổng lượng mưa lớn, độ ẩm không khí cao.", "một mùa có mưa nhiều và một mùa mưa ít."], correct: 2 },
+        { q: "Nước ta nằm trong vùng nội chí tuyến nên", options: ["độ ẩm trung bình năm cao.", "tổng bức xạ Mặt Trời lớn.", "giàu có các loại khoáng sản.", "khí hậu phân thành hai mùa"], correct: 1 },
+        { q: "Nước ta nằm trong vùng nội chí tuyến nên", options: ["tiếp giáp với Thái Bình Dương.", "góc nhập xạ trong năm không đổi", "lượng mưa cao đều quanh năm.", "Tín phong hoạt động thường xuyên"], correct: 3 },
+        { q: "Đại bộ phận lãnh thổ của nước ta nằm trong múi giờ số 7 là do", options: ["nước ta trải dài nhiều vĩ độ và địa hình phân hóa.", "lãnh thổ của nước ta trải dài theo chiều Bắc-Nam.", "nằm trong vùng nội chí tuyến thuộc bán cầu Bắc.", "kinh tuyến 105°Đ chạy qua lãnh thổ của nước ta."], correct: 3 },
+        { q: "Việc thông thương qua lại giữa nước ta với các nước láng giềng chỉ có thể tiến hành thuận lợi ở một số cửa khẩu, chủ yếu là do", options: ["thuận tiện cho đảm bảo an ninh, quốc phòng.", "phần lớn biên giới nước ta nằm ở miền núi.", "phần lớn biên giới chạy theo các đỉnh núi, hẻm núi.", "cửa khẩu là nơi có địa hình thuận lợi cho qua lại."], correct: 3 },
+        { q: "Nước ta có nền văn hoá phong phú độc đáo là do", options: ["nằm trong khu vực thiên nhiên nhiệt đới ẩm, gió mùa.", "là nơi giao thoa của các dân tộc trong và ngoài khu vực Đông Nam Á.", "chịu ảnh hưởng của các nền văn minh cổ đại và văn minh phương Tây.", "nằm trong khu vực đang diễn ra những hoạt động kinh tế sôi động trên thế giới."], correct: 1 },
+        { q: "Ý nghĩa kinh tế của vị trí địa lí nước ta là", options: ["tự nhiên phân hóa đa dạng giữa Bắc - Nam, Đông - Tây.", "nguồn tài nguyên sinh vật và khoáng sản vô cùng giàu có.", "thuận lợi giao lưu với các nước trong khu vực và thế giới.", "thuận lợi để xây dựng nền văn hóa tương đồng với khu vực."], correct: 2 },
+        { q: "Trong các vùng biển sau đây, vùng nào có diện tích lớn nhất?", options: ["Nội thủy.", "Lãnh hải.", "Tiếp giáp lãnh hải.", "Đặc quyền kinh tế."], correct: 3 },
+        { q: "Đường cơ sở của nước ta được xác định là đường", options: ["được xem là ranh giới trên biển của nước ta.", "nối các mũi đất xa nhất với các đảo ven bờ.", "tính từ mức nước thủy triều lúc lên cao nhất.", "khoảng cách 12 hải lí tính từ vùng lãnh hải."], correct: 1 },
+        { q: "Lãnh thổ nước ta", options: ["có đường bờ biển dài từ Bắc vào Nam.", "nằm hoàn toàn ở trong vùng xích đạo.", "có vùng đất gấp nhiều lần vùng biển.", "chỉ tiếp giáp với các quốc gia trên biển."], correct: 0 },
+        { q: "Vùng nội thủy của biển nước ta", options: ["nằm liền kề vùng biển quốc tế.", "kề với vùng tiếp giáp lãnh hải.", "nằm ở phía trong đường cơ sở.", "là phần nằm ngầm ở dưới biển."], correct: 2 },
+        { q: "Cơ sở nào sau đây dùng để xác định đường biên giới quốc gia trên biển của nước ta?", options: ["Bên ngoài của lãnh hải.", "Đường nội thủy.", "Hệ thống các đảo.", "Phía trong đường cơ sở."], correct: 0 },
+        { q: "Vùng trời của nước ta trên biển được xác định bằng", options: ["ranh giới bên ngoài của lãnh hải và không gian của các đảo.", "ranh giới của nội thủy, lãnh hải và vùng đặc quyền kinh tế.", "không gian trên mặt biển với diện tích khoảng 1 triệu km².", "không gian trên các hải đảo và không gian trên mặt biển."], correct: 0 },
+        { q: "Vùng đặc quyền về kinh tế rộng 200 hải lí, tương ứng với", options: ["22,224km.", "44,448km.", "200000km.", "370,4km."], correct: 3 }
+    ];
+
+    const part2Questions = [
+        { q: "Vùng biển nước ta có nhiều thuận lợi cho phát triển du lịch biển đảo.", correct: true },
+        { q: "Dầu khí là loại khoáng sản có giá trị kinh tế nhất ở vùng biển nước ta.", correct: true },
+        { q: "Ở nước ta, Bắc Trung Bộ là vùng có điều kiện thuận lợi nhất để xây dựng cảng nước sâu.", correct: false },
+        { q: "Một trong những giải pháp quan trọng để khai thác nguồn lợi hải sản là đánh bắt xa bờ.", correct: true },
+        { q: "Biên giới trên đất liền nước ta tiếp giáp với bốn quốc gia.", correct: false },
+        { q: "Việt Nam nằm hoàn toàn trong vùng nội chí tuyến Bắc bán cầu.", correct: true },
+        { q: "Nước ta nằm hoàn toàn ở bán cầu Đông.", correct: true },
+        { q: "Thiên nhiên nước ta chịu ảnh hưởng sâu sắc của biển.", correct: true },
+        { q: "Lãnh thổ phần đất liền nước ta kéo dài trên 17 vĩ độ.", correct: false },
+        { q: "Vị trí địa lí tạo thuận lợi cho nước ta phát triển tổng hợp kinh tế biển.", correct: true }
+    ];
+
+    // ========== HÀM XÁO TRỘN ==========
+    function shuffleArray(arr) {
+        for (let i = arr.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+        return arr;
+    }
+
+    function preparePart1() {
+        let shuffled = shuffleArray([...part1Questions]);
+        return shuffled.map(item => {
+            const optWithIndex = item.options.map((opt, idx) => ({ opt, idx }));
+            const shuffledOpts = shuffleArray(optWithIndex);
+            const newOptions = shuffledOpts.map(o => o.opt);
+            const newCorrectIdx = shuffledOpts.findIndex(o => o.idx === item.correct);
+            return { q: item.q, options: newOptions, correct: newCorrectIdx };
+        });
+    }
+
+    function preparePart2() {
+        return shuffleArray([...part2Questions]);
+    }
+
+    // ========== TRẠNG THÁI ==========
+    let currentPart1 = [];
+    let currentPart2 = [];
+    let userAnswersPart1 = [];
+    let userAnswersPart2 = [];
+    let submitted = false;
+
+    // ========== RENDER ==========
+    function renderQuiz() {
+        currentPart1 = preparePart1();
+        currentPart2 = preparePart2();
+        userAnswersPart1 = new Array(currentPart1.length).fill(null);
+        userAnswersPart2 = new Array(currentPart2.length).fill(null);
+        submitted = false;
+
+        // Phần 1
+        const container1 = document.getElementById('part1Container');
+        container1.innerHTML = '';
+        currentPart1.forEach((item, qIndex) => {
+            const card = document.createElement('div');
+            card.className = 'question-card';
+            card.id = `p1_card_${qIndex}`;
+            card.innerHTML = `<div class="question-text">Câu ${qIndex + 1}: ${item.q}</div>`;
+            const optionsDiv = document.createElement('div');
+            optionsDiv.className = 'options';
+            item.options.forEach((opt, optIndex) => {
+                const optDiv = document.createElement('div');
+                optDiv.className = 'option';
+                const radioId = `p1_q${qIndex}_o${optIndex}`;
+                optDiv.innerHTML = `
+                    <input type="radio" name="p1_q${qIndex}" id="${radioId}" value="${optIndex}" data-q="${qIndex}" data-opt="${optIndex}">
+                    <label for="${radioId}">${String.fromCharCode(65 + optIndex)}. ${opt}</label>
+                `;
+                optionsDiv.appendChild(optDiv);
+            });
+            card.appendChild(optionsDiv);
+            container1.appendChild(card);
+        });
+
+        // Phần 2
+        const container2 = document.getElementById('part2Container');
+        container2.innerHTML = '';
+        currentPart2.forEach((item, qIndex) => {
+            const card = document.createElement('div');
+            card.className = 'question-card';
+            card.id = `p2_card_${qIndex}`;
+            card.innerHTML = `<div class="question-text">Câu ${qIndex + 1}: ${item.q}</div>`;
+            const tfDiv = document.createElement('div');
+            tfDiv.className = 'tf-options';
+            const trueDiv = document.createElement('div');
+            trueDiv.className = 'option';
+            trueDiv.innerHTML = `
+                <input type="radio" name="p2_q${qIndex}" id="p2_q${qIndex}_true" value="true" data-q="${qIndex}" data-val="true">
+                <label for="p2_q${qIndex}_true">✅ Đúng</label>
+            `;
+            const falseDiv = document.createElement('div');
+            falseDiv.className = 'option';
+            falseDiv.innerHTML = `
+                <input type="radio" name="p2_q${qIndex}" id="p2_q${qIndex}_false" value="false" data-q="${qIndex}" data-val="false">
+                <label for="p2_q${qIndex}_false">❌ Sai</label>
+            `;
+            tfDiv.appendChild(trueDiv);
+            tfDiv.appendChild(falseDiv);
+            card.appendChild(tfDiv);
+            container2.appendChild(card);
+        });
+
+        // Lắng nghe
+        document.querySelectorAll('#part1Container input[type="radio"]').forEach(radio => {
+            radio.addEventListener('change', (e) => {
+                const qIdx = parseInt(e.target.dataset.q);
+                const optIdx = parseInt(e.target.dataset.opt);
+                userAnswersPart1[qIdx] = optIdx;
+            });
+        });
+        document.querySelectorAll('#part2Container input[type="radio"]').forEach(radio => {
+            radio.addEventListener('change', (e) => {
+                const qIdx = parseInt(e.target.dataset.q);
+                userAnswersPart2[qIdx] = e.target.value === 'true';
+            });
+        });
+
+        // Reset UI
+        document.getElementById('scoreDisplay').textContent = '0.0';
+        document.getElementById('resultBox').classList.add('hidden');
+    }
+
+    // ========== CHẤM ĐIỂM & HIỂN THỊ CHI TIẾT ==========
+    function handleSubmit() {
+        if (submitted) return;
+        submitted = true;
+
+        // === Tính điểm ===
+        let correctP1 = 0, wrongP1 = 0;
+        let correctP2 = 0, wrongP2 = 0;
+        const wrongDetails = []; // { part, qIndex, question, yourAnswer, correctAnswer }
+
+        for (let i = 0; i < currentPart1.length; i++) {
+            const isCorrect = userAnswersPart1[i] !== null && userAnswersPart1[i] === currentPart1[i].correct;
+            if (isCorrect) correctP1++;
+            else {
+                wrongP1++;
+                wrongDetails.push({
+                    part: 1,
+                    qIndex: i,
+                    question: currentPart1[i].q,
+                    yourAnswer: userAnswersPart1[i] !== null ? `${String.fromCharCode(65 + userAnswersPart1[i])}. ${currentPart1[i].options[userAnswersPart1[i]]}` : '(Chưa trả lời)',
+                    correctAnswer: `${String.fromCharCode(65 + currentPart1[i].correct)}. ${currentPart1[i].options[currentPart1[i].correct]}`
+                });
+                // Highlight câu sai
+                document.getElementById(`p1_card_${i}`).classList.add('wrong-highlight');
+            }
+        }
+
+        for (let i = 0; i < currentPart2.length; i++) {
+            const isCorrect = userAnswersPart2[i] !== null && userAnswersPart2[i] === currentPart2[i].correct;
+            if (isCorrect) correctP2++;
+            else {
+                wrongP2++;
+                wrongDetails.push({
+                    part: 2,
+                    qIndex: i,
+                    question: currentPart2[i].q,
+                    yourAnswer: userAnswersPart2[i] === null ? '(Chưa trả lời)' : (userAnswersPart2[i] ? '✅ Đúng' : '❌ Sai'),
+                    correctAnswer: currentPart2[i].correct ? '✅ Đúng' : '❌ Sai'
+                });
+                document.getElementById(`p2_card_${i}`).classList.add('wrong-highlight');
+            }
+        }
+
+        const score = Math.round((correctP1 * 0.3 + correctP2 * 0.4) * 10) / 10;
+
+        // === Hiển thị điểm tổng ===
+        document.getElementById('scoreDisplay').textContent = score.toFixed(1);
+
+        // === Xây dựng khối kết quả ===
+        const resultBox = document.getElementById('resultBox');
+        resultBox.classList.remove('hidden');
+
+        // Header
+        const header = document.getElementById('resultHeader');
+        if (score >= 8) {
+            header.textContent = `🎉 Xuất sắc! Điểm: ${score.toFixed(1)} / 10`;
+            header.style.color = '#1f5e3b';
+        } else if (score >= 5) {
+            header.textContent = `📘 Điểm: ${score.toFixed(1)} / 10 – Cần cố gắng thêm!`;
+            header.style.color = '#8a6d3b';
+        } else {
+            header.textContent = `📕 Điểm: ${score.toFixed(1)} / 10 – Hãy ôn tập lại nhé!`;
+            header.style.color = '#a94442';
+        }
+
+        // Stats grid
+        const statsGrid = document.getElementById('statsGrid');
+        statsGrid.innerHTML = `
+            <div class="stat-card score">
+                <div class="stat-value">${score.toFixed(1)}</div>
+                <div class="stat-label">Tổng điểm</div>
+            </div>
+            <div class="stat-card correct">
+                <div class="stat-value">${correctP1 + correctP2}</div>
+                <div class="stat-label">Câu đúng (P1: ${correctP1}, P2: ${correctP2})</div>
+            </div>
+            <div class="stat-card wrong">
+                <div class="stat-value">${wrongP1 + wrongP2}</div>
+                <div class="stat-label">Câu sai (P1: ${wrongP1}, P2: ${wrongP2})</div>
+            </div>
+        `;
+
+        // Detail section
+        const detailSection = document.getElementById('detailSection');
+        if (wrongDetails.length === 0) {
+            detailSection.innerHTML = `<div class="all-good">🌟 Tuyệt vời! Bạn không có câu nào sai.</div>`;
+        } else {
+            let html = `<div class="detail-title">🔍 Chi tiết các câu sai (${wrongDetails.length} câu)</div>`;
+            wrongDetails.forEach((d, idx) => {
+                const partLabel = d.part === 1 ? 'Phần I' : 'Phần II';
+                const qNum = d.qIndex + 1;
+                html += `
+                    <div class="wrong-item">
+                        <div class="wq">${partLabel} – Câu ${qNum}: ${d.question}</div>
+                        <div class="wline"><span class="label">Bạn chọn:</span> <span class="your-ans">${d.yourAnswer}</span></div>
+                        <div class="wline"><span class="label">Đáp án đúng:</span> <span class="correct-ans">${d.correctAnswer}</span></div>
+                    </div>
+                `;
+            });
+            detailSection.innerHTML = html;
+        }
+
+        // Cuộn tới kết quả
+        resultBox.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function resetQuiz() {
+        submitted = false;
+        renderQuiz();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    window.addEventListener('load', () => {
+        renderQuiz();
+        document.getElementById('submitBtn').addEventListener('click', handleSubmit);
+        document.getElementById('resetBtn').addEventListener('click', resetQuiz);
+    });
+</script>
+</body>
+</html>
